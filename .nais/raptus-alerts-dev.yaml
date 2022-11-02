@@ -44,7 +44,7 @@ spec:
       for: 3m
       description: '*\{{ $labels.log_app }}* har logget høy andel feil.'
       #TODO action: "Sjekk loggene til app \{{ $labels.log_app }} i namespace \{{ $labels.log_namespace }} for å se hvorfor det er så mye feil."
-      action: "Sjekk loggene til applikasjonen for å se hvorfor det er så mye feil."
+      action: "Sjekk loggene til applikasjonen i Kibana for å se hvorfor det er så mye feil."
       severity: warning
     # Sjekker om containere restartes flere ganger
     - alert: Applikasjon restarter kontinuerlig
@@ -52,5 +52,4 @@ spec:
       for: 3m
       description: '*\{{ $labels.container }}* har restartet flere ganger den siste halvtimen.'
       action: 'Kjør `kubectl describe pod \{{ $labels.container }} -n {{ $labels.namespace }}` for å se events, og `kubectl logs -l app=\{{ $labels.container }} -n {{ $labels.namespace }}` for logger.'
-      #action: "Kjør `kubectl describe pod \{{ $labels.container }} -n raptus` for å se events, og `kubectl logs -l app=\{{ $labels.container }} -n {{ namespace }}` for logger."
       severity: danger
