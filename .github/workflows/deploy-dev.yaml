@@ -23,4 +23,3 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: .nais/raptus-alerts-dev.yaml
           PRINT_PAYLOAD: true
-          
