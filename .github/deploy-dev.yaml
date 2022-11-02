@@ -1,0 +1,25 @@
+name: Deploy alerts to dev
+on:
+  push:
+    branches-ignore:
+      - 'master'
+    paths:
+      - .github/workflows/deploy-dev.yaml
+      - .nais/raptus-alerts-dev.yaml
+  workflow_dispatch:
+
+jobs:
+  deploy_dev:
+    name: Deploy alerts to dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to dev-gcp
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/raptus-alerts-dev.yaml
+          PRINT_PAYLOAD: true
