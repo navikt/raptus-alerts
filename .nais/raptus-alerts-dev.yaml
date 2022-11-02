@@ -51,6 +51,6 @@ spec:
       expr: sum(increase(kube_pod_container_status_restarts_total{namespace="{{ namespace }}"}[5m])) by (container) > 3
       for: 3m
       description: '*\{{ $labels.container }}* har restartet flere ganger den siste halvtimen.'
-      action: 'Kjør `kubectl describe pod \{{ $labels.container }} -n {{ $labels.namespace }}` for å se events, og `kubectl logs -l app=\{{ $labels.container }} -n {{ namespace }}` for logger.'
+      action: 'Kjør `kubectl describe pod \{{ $labels.container }} -n {{ $labels.namespace }}` for å se events, og `kubectl logs -l app=\{{ $labels.container }} -n {{ $labels.namespace }}` for logger.'
       #action: "Kjør `kubectl describe pod \{{ $labels.container }} -n raptus` for å se events, og `kubectl logs -l app=\{{ $labels.container }} -n {{ namespace }}` for logger."
       severity: danger
