@@ -44,7 +44,8 @@ spec:
       for: 3m
       description: '*\{{ $labels.log_app }}* har logget høy andel feil.'
       #TODO action: "Sjekk loggene til app \{{ $labels.log_app }} i namespace \{{ $labels.log_namespace }} for å se hvorfor det er så mye feil."
-      action: "Sjekk loggene til applikasjonen i Kibana for å se hvorfor det er så mye feil."
+      action: "Sjekk loggene til app \{{ $labels.log_app }} i namespace raptus for å se hvorfor det er så mye feil."
+      #action: "Sjekk loggene til applikasjonen i Kibana for å se hvorfor det er så mye feil."
       severity: warning
     # Sjekker om containere restartes flere ganger
     - alert: Applikasjon restarter kontinuerlig
