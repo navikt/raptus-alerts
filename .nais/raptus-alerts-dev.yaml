@@ -26,9 +26,16 @@ spec:
       severity: danger
     # Sjekker om en applikasjon har logget mange feil nylig
     - alert: Høy feilrate i logger
-      expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_namespace="raptus",log_level=~"Warning|Error"}[48h])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_namespace="raptus"}[48h]))) > 3
+      expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_namespace="raptus",log_level=~"Warning|Error"}[48h])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_namespace="raptus"}[48h]))) > 1
       #expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_namespace="raptus",log_level=~"Warning|Error"}[3m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_namespace="raptus"}[3m]))) > 10
       for: 3m
       description: '*{{ $labels.log_app }}* har logget høy andel feil.'
       action: "Sjekk loggene til app {{ $labels.log_app }} i namespace raptus for å se hvorfor det er så mye feil."
       severity: warning
+    # Sjekk HTTP 5xx-serverfeil
+    - alert: Høy andel HTTP serverfeil (5xx-responser)
+      expr: (100 * (sum by (service) (rate(nginx_ingress_controller_requests{status=~"^5\\d\\d", namespace="raptus"}[3m])) / sum by (service) (rate(nginx_ingress_controller_requests{namespace="raptus"}[3m])))) > 1
+      for: 3m
+      description: '*{{ $labels.service }}* har logget mange feil.'
+      action: 'Sjekk loggene for å se hvorfor {{ $labels.service }} returnerer HTTP 5xx-feilresponser.'
+      severity: danger
