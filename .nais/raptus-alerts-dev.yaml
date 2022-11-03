@@ -12,7 +12,7 @@ spec:
   alerts:
     # Sjekker om en eller flere applikasjoner er nede i namespace meldekort, dvs. at det ikke finnes noen kjørende podder
     - alert: Applikasjon er nede
-      expr: kube_deployment_status_replicas_available{namespace="raptus"} > 0
+      expr: kube_deployment_status_replicas_available{namespace="raptus"} = 0
       for: 3m
       description: '*{{ $labels.deployment }}* er nede i namespace raptus.'
       action: 'Kjør `kubectl describe pod -l app={{ $labels.deployment }} -n raptus` for å se events, og `kubectl logs -l app={{ $labels.deployment }} -n raptus` for logger. Sjekk også Kibana for eventuelle feil som er logget, query `application: {{ $labels.deployment }} AND (level:Error OR level:Warning)`.'
@@ -24,3 +24,10 @@ spec:
       description: '*{{ $labels.container }}* har restartet flere ganger den siste halvtimen.'
       action: 'Se `kubectl describe pod {{ $labels.container }} -n raptus` for å se events, og `kubectl logs -l app={{ $labels.container }} -n raptus` for logger.'
       severity: danger
+    # Sjekker om en applikasjon har logget mange feil nylig
+    - alert: Høy feilrate i logger
+      expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_namespace="raptus",log_level=~"Warning|Error"}[3m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_namespace="raptus"}[3m]))) > 10
+      for: 3m
+      description: '*{{ $labels.log_app }}* har logget høy andel feil.'
+      action: "Sjekk loggene til app {{ $labels.log_app }} i namespace {{ $labels.log_namespace }} for å se hvorfor det er så mye feil."
+      severity: warning
