@@ -12,7 +12,7 @@ spec:
   alerts:
     # Sjekker om en eller flere applikasjoner er nede i namespace meldekort, dvs. at det ikke finnes noen kjørende podder
     - alert: Applikasjon er nede
-      expr: kube_deployment_status_replicas_available{namespace="raptus"} == 0
+      expr: kube_deployment_status_replicas_available{namespace="raptus"} > 0
       for: 3m
       description: '*\{{ $labels.deployment }}* er nede i namespace raptus.'
       action: 'Kjør `kubectl describe pod -l app=\{{ $labels.deployment }} -n raptus` for å se events, og `kubectl logs -l app=\{{ $labels.deployment }} -n raptus` for logger. Sjekk også Kibana for eventuelle feil som er logget, query `application: \{{ $labels.deployment }} AND (level:Error OR level:Warning)`.'
